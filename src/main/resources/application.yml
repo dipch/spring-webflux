@@ -3,5 +3,11 @@ spring:
     url: r2dbc:postgresql://localhost:5432/localibreport?schema=anime
     username: sa
     password: sa
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          r2dbc: DEBUG
 
 
