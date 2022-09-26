@@ -38,8 +38,19 @@ public class AnimeService {
         return findById(anime.getId())
                 .map(animeFound -> anime.withId(animeFound.getId()))
                 .flatMap(animeRepository::save)
-                .thenEmpty(Mono.empty())
-                ;
+                .thenEmpty(Mono.empty());
 
+    }
+
+    public Mono<Void> updateById(Anime anime) {
+        return findById(anime.getId())
+                .flatMap(animeRepository::save)
+                .then();
+    }
+
+    public Mono<Void> delete(int id) {
+        return findById(id)
+                .flatMap(animeRepository::delete)
+                ;
     }
 }
