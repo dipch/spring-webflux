@@ -9,7 +9,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
@@ -17,6 +17,7 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.springframework.boot.web.error.ErrorAttributeOptions.*;
 import static org.springframework.boot.web.error.ErrorAttributeOptions.defaults;
 import static org.springframework.boot.web.error.ErrorAttributeOptions.of;
 
@@ -37,7 +38,7 @@ public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
 
     private Mono<ServerResponse> formatErrorResponse(ServerRequest request){
         String query = request.uri().getQuery();
-        ErrorAttributeOptions errorAttributeOptions = isTraceEnabled(query) ? of(ErrorAttributeOptions.Include.STACK_TRACE) : defaults();
+        ErrorAttributeOptions errorAttributeOptions = isTraceEnabled(query) ? of(Include.STACK_TRACE) : defaults();
         Map<String, Object> errorAttributesMap = getErrorAttributes(request, errorAttributeOptions);
 //        Map<String, Object> errorAttributesMap = getErrorAttributes(request, ErrorAttributeOptions.of(ErrorAttributeOptions.Include.STACK_TRACE));
 //        Map<String, Object> errorAttributesMap = getErrorAttributes(request, ErrorAttributeOptions.defaults());
@@ -49,7 +50,7 @@ public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
     }
 
     private boolean isTraceEnabled(String query){
-        return !StringUtils.hasLength(query) && query.contains("trace=true");
+        return !ObjectUtils.isEmpty(query) && query.contains("trace=true");
         // StringUtils.isEmpty() deperecated
     }
 }
